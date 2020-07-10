@@ -1,6 +1,6 @@
 <template>
   <div class="conversor">
-    <img alt="Vue logo" class="text-center" src="./../assets/logo.png" />
+    <img alt="Vue logo" class="text-center" src="./../assets/money.png" />
     <h2>{{ moedaA }} {{ to }} {{ moedaB }}</h2>
     <input type="text" v-model="moedaA_value" v-bind:placeholder="moedaAvalue" />
     <input type="button" value="Converter" v-on:click="converter" />
