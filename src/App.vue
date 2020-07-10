@@ -28,6 +28,7 @@ export default {
 <style>
 body {
   background: rgb(241, 241, 241);
+  margin: 0;
 }
 #app {
   display: flex;
@@ -48,5 +49,15 @@ body {
   display: flex;
   justify-content: center;
   padding: 10px;
+}
+
+@media (max-width: 945px) {
+  .line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
 }
 </style>
