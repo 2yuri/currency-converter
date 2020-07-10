@@ -1,10 +1,11 @@
 <template>
   <div class="conversor">
     <img alt="Vue logo" class="text-center" src="./../assets/money.png" />
-    <h2>{{ moedaA }} {{ to }} {{ moedaB }}</h2>
-    <input type="text" v-model="moedaA_value" v-bind:placeholder="moedaAvalue" />
+    <h2 v-if="convert">{{ moedaA }} {{ to }} {{ moedaB }}</h2>
+    <h2 v-if="!convert">Carregando...</h2>
+    <input type="number" v-model="moedaA_value" v-bind:placeholder="moedaA" />
     <input type="button" value="Converter" v-on:click="converter" />
-    <h2>{{moedaB_value}}</h2>
+    <h2>{{ moedaB_value }}</h2>
   </div>
 </template>
 
@@ -16,35 +17,35 @@ export default {
   data() {
     return {
       to: "Para",
-      moedaAvalue: this.moedaA,
-      moedaA_value: "",
-      moedaB_value: 0
+      moedaA_value: 1,
+      moedaB_value: 0,
+      convert: true
     };
   },
-
+  mounted: function() {
+    this.$nextTick(function() {
+      this.converter();
+    });
+  },
   methods: {
-    async converter() {
+    converter() {
       if (this.moedaA_value == "") {
         alert("Digite um valor");
       } else {
+        let apiKey = "96fd3e366a24ab0de23a";
         let from_to = `${this.moedaA}_${this.moedaB}`;
-        let url = `https://free.currconv.com/api/v7/convert?q=${from_to}&compact=ultra&apiKey=3a1b8c53c13a6a68c088`;
+        let url = `https://free.currconv.com/api/v7/convert?q=${from_to}&compact=ultra&apiKey=${apiKey}`;
 
-        let cloneMoedaA = this.moedaA;
-        let cloneMoedaB = this.moedaB;
+        this.convert = false;
 
-        this.to = "Carregando ...";
-        this.moedaA = "";
-        this.moedaB = "";
-
-        await fetch(url)
+        fetch(url)
           .then(res => {
             return res.json();
           })
           .then(json => {
             let value = json[from_to];
 
-            switch (cloneMoedaA) {
+            switch (this.moedaA) {
               case "USD":
                 this.moedaB_value =
                   "R$ " + (value * parseFloat(this.moedaA_value)).toFixed(2);
@@ -61,7 +62,7 @@ export default {
                 break;
             }
 
-            switch (cloneMoedaB) {
+            switch (this.moedaB) {
               case "USD":
                 this.moedaB_value =
                   "$ " + (value * parseFloat(this.moedaA_value)).toFixed(2);
@@ -78,10 +79,8 @@ export default {
                 break;
             }
 
-            this.moedaA = cloneMoedaA;
-            this.moedaB = cloneMoedaB;
-            this.to = "Para";
-            this.value_validation = "";
+            this.convert = true;
+            this.moedaA_value = "";
           });
       }
     }
